@@ -1,164 +1,202 @@
 import React, { useState } from "react";
-import { Form, Row, Button } from "react-bootstrap";
+import { Form, Row, Button, Card, Col } from "react-bootstrap";
 import DatePicker from "react-date-picker";
-import FormContainer from "./FormConatiner";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../redux/features/TodoSlice";
+import FormContainer from "./FormContainer";
 
 const AddTodo = () => {
   const [validated, setValidated] = useState(false);
-  const [name, setName] = useState("");
-  const [gender, setGender] = useState("");
-  const [hobby, setHobby] = useState([]);
-  const [age, setAge] = useState(18);
-  const [date, setDate] = useState(new Date());
-  const [taskName, setTaskName] = useState("");
-  const [status, setStatus] = useState(false);
-  const [action, setAction] = useState("");
+  const [value, setValue] = useState({
+    name: "",
+    gender: "male",
+    hobby: [],
+    age: 18,
+    date: new Date(),
+    taskName: "",
+    status: "active",
+    action: "",
+  });
 
+  const dispatch = useDispatch();
+  const handleChange = ({ target }) => {
+    let hobby = [];
+    if (target.name === "hobby") hobby = [...value.hobby, target.value];
+    setValue({
+      ...value,
+      [target.name]: target.value,
+      hobby,
+      id: Date.now(),
+    });
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
-    const submitData = {
-      name,
-      gender,
-      hobby,
-      age,
-      date,
-      taskName,
-      status,
-      action,
-    };
-    console.log(submitData);
+    console.log(value);
+    dispatch(addTodo(value));
   };
   return (
     <FormContainer>
-      <h1 className="my-3"> Add To Do</h1>
-      <Form onSubmit={handleSubmit}>
-        <Row className="mb-3">
-          <Form.Group controlId="name" className="my-3">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </Form.Group>
+      <Card bg="light" border="secondary">
+        <Card.Title className="text-center font-weight-bold py-3">
+          Add To Do
+        </Card.Title>
+        <Card.Body>
+          <Form onSubmit={handleSubmit}>
+            <Row className="mb-3">
+              <Form.Group controlId="name" className="mb-3">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  name="name"
+                  type="text"
+                  placeholder="Enter your name"
+                  value={value?.name}
+                  onChange={(e) => handleChange(e)}
+                />
+              </Form.Group>
 
-          <Form.Group controlId="gender" className="my-3">
-            <Form.Label>Gender</Form.Label>
-            <Form.Check
-              inline
-              label="Male"
-              name="gender"
-              type="radio"
-              id="gender-male"
-              value="male"
-              checked={gender === "male"}
-              onChange={(e) => setGender(e.target.value)}
-            />
-            <Form.Check
-              inline
-              label="Female"
-              name="gender"
-              type="radio"
-              id="gender-female"
-              value="female"
-              checked={gender === "female"}
-              onChange={(e) => setGender(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="hobby" className="my-3">
-            <Form.Label>Hobby</Form.Label>
-            <Form.Check
-              inline
-              label="Sports"
-              name="sports"
-              id="hobby"
-              value="sports"
-              checked={hobby.includes("sports")}
-              onChange={(e) =>
-                setHobby((prevHobby) => [...prevHobby, e.target.value])
-              }
-            />
-            <Form.Check
-              inline
-              label="Reading"
-              name="reading"
-              id="hobby-reading"
-              value="reading"
-              checked={hobby.includes("reading")}
-              onChange={(e) =>
-                setHobby((prevHobby) => [...prevHobby, e.target.value])
-              }
-            />
+              <Form.Group controlId="gender" className="mb-3">
+                <Col>
+                  <Form.Label>Gender</Form.Label>
+                </Col>
+                <Col>
+                  <Form.Check
+                    inline
+                    label="Male"
+                    name="gender"
+                    type="radio"
+                    id="gender-male"
+                    value="male"
+                    checked={value?.gender === "male"}
+                    onChange={(e) => handleChange(e)}
+                  />
+                  <Form.Check
+                    inline
+                    label="Female"
+                    name="gender"
+                    type="radio"
+                    id="gender-female"
+                    value="female"
+                    checked={value?.gender === "female"}
+                    onChange={(e) => handleChange(e)}
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group controlId="hobby" className="mb-3">
+                <Col>
+                  <Form.Label>Hobby</Form.Label>
+                </Col>
+                <Col>
+                  <Form.Check
+                    inline
+                    label="Sports"
+                    name="hobby"
+                    id="hobby"
+                    value="sports"
+                    checked={value?.hobby?.includes("sports")}
+                    onChange={(e) => handleChange(e)}
+                  />
+                  <Form.Check
+                    inline
+                    label="Reading"
+                    name="hobby"
+                    id="hobby-reading"
+                    value="reading"
+                    checked={value?.hobby?.includes("reading")}
+                    onChange={(e) => handleChange(e)}
+                  />
 
-            <Form.Check
-              inline
-              label="Music"
-              name="music"
-              id="hobby-music"
-              value="music"
-              checked={hobby.includes("music")}
-              onChange={(e) =>
-                setHobby((prevHobby) => [...prevHobby, e.target.value])
-              }
-            />
-          </Form.Group>
-          <Form.Group controlId="age" className="my-3">
-            <Form.Label>Age</Form.Label>
-            <Form.Range
-              id="age"
-              onChange={(e) => setAge(e.target.value)}
-              value={age}
-              min={18}
-              max={55}
-              step={1}
-            />
-            {age}
-          </Form.Group>
+                  <Form.Check
+                    inline
+                    label="Music"
+                    name="hobby"
+                    id="hobby-music"
+                    value="music"
+                    checked={value?.hobby?.includes("music")}
+                    onChange={(e) => handleChange(e)}
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group controlId="age" className="mb-3">
+                <Form.Label>Age</Form.Label>
+                <Row>
+                  <Col sm={11}>
+                    <Form.Range
+                      className="custom-range"
+                      id="age"
+                      name="age"
+                      onChange={(e) => handleChange(e)}
+                      value={value?.age}
+                      min={18}
+                      max={55}
+                      step={1}
+                    />
+                  </Col>
+                  <Col sm={1}>{value?.age}</Col>
+                </Row>
+              </Form.Group>
 
-          <Form.Group controlId="date" className="my-3">
-            <Form.Label>Date</Form.Label>
-            <DatePicker onChange={setDate} value={date} />
-          </Form.Group>
+              <Form.Group controlId="date" className="mb-3">
+                <Row>
+                  <Col md={2}>
+                    <Form.Label>Date</Form.Label>
+                  </Col>
+                  <Col md={10}>
+                    <DatePicker
+                      onChange={(value) =>
+                        handleChange({ target: { name: "date", value } })
+                      }
+                      value={value?.date}
+                      name="date"
+                    />
+                  </Col>
+                </Row>
+              </Form.Group>
 
-          <Form.Group controlId="taskName" className="my-3">
-            <Form.Label>Task Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter your Task name"
-              value={taskName}
-              onChange={(e) => setTaskName(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="status" className="my-3">
-            <Form.Group className="mb-3">
-              <Form.Label htmlFor="status">Status</Form.Label>
-              <Form.Select
-                id="status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option value="active">Active</option>
-                <option vlaue="inactive">Inactive</option>
-              </Form.Select>
-            </Form.Group>
-          </Form.Group>
+              <Form.Group controlId="taskName" className="mb-3">
+                <Form.Label>Task Name</Form.Label>
+                <Form.Control
+                  name="taskName"
+                  type="text"
+                  placeholder="Enter your Task name"
+                  value={value?.taskName}
+                  onChange={(e) => handleChange(e)}
+                />
+              </Form.Group>
+              <Form.Group controlId="status" className="mb-3">
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="status">Status</Form.Label>
+                  <Form.Select
+                    name="status"
+                    id="status"
+                    value={value?.status}
+                    onChange={(e) => handleChange(e)}
+                  >
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </Form.Select>
+                </Form.Group>
+              </Form.Group>
 
-          <Form.Group controlId="action" className="my-3">
-            <Form.Label>Action</Form.Label>
-            <Form.Control
-              as="textarea"
-              type="text"
-              placeholder="Action"
-              value={action}
-              onChange={(e) => setAction(e.target.value)}
-            />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Row>
-      </Form>
+              <Form.Group controlId="action" className="mb-3">
+                <Form.Label>Action</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  type="text"
+                  name="action"
+                  placeholder="Action"
+                  value={value?.action}
+                  onChange={(e) => handleChange(e)}
+                />
+              </Form.Group>
+              <div>
+                <Button variant="dark" type="submit" style={{ width: "100%" }}>
+                  Add
+                </Button>
+              </div>
+            </Row>
+          </Form>
+        </Card.Body>
+      </Card>
     </FormContainer>
   );
 };

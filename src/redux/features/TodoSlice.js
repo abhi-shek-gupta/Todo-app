@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-//initail state of TodoSlice
-const initialState = {};
+// Initialize state of TodoSlice
+const initialState = [];
 const TodoSlice = createSlice({
-    name: 'Todo',
+    name: 'Todos',
     initialState,
     reducers: {
         addTodo: (state, { payload }) => {
-
+            console.log({ state, payload })
+            // return { ...state, todos: [...state.todos, payload] }
         },
         editTodo: (state, { payload }) => {
 
