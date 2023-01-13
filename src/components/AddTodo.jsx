@@ -49,14 +49,21 @@ const AddTodo = () => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
+    const re = /^[A-Za-z ]+$/;
     if (!value.name) {
-      setError((error) => ({ ...error, name: 'Please Enter Name' }))
+      setError((error) => ({ ...error, name: 'Required' }))
       return;
     }
+    if (!re.test(value.name)) {
+      setError((error) => ({ ...error, name: 'Only Alphabets are allowed' }))
+      return;
+    }
+
     if (!value.taskName) {
-      setError((error) => ({ ...error, taskName: 'Please Task Name' }))
+      setError((error) => ({ ...error, taskName: 'Required' }))
       return;
     }
+
     if (isEdit) {
       dispatch(updateTodo({ ...value, id: editTodoValue.id }))
     }
