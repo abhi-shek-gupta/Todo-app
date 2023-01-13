@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Alert, Badge, Button, Row, Col } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { editTodo, deleteTodo } from '../redux/features/TodoSlice';
+import { editTodo, openPopup } from '../redux/features/TodoSlice';
 
 const TodoList = () => {
     const { todos } = useSelector(state => state.todo);
@@ -9,7 +9,7 @@ const TodoList = () => {
 
     const formatDate = (date) => {
         const d = new Date(`${date}`);
-        return `${d.getDate()}/${d.getMonth() + 1 +   1}/${d.getFullYear()}`
+        return `${d.getDate()}/${d.getMonth() + 1 + 1}/${d.getFullYear()}`
     }
     if (todos.length === 0) return (<Alert variant='info'>
         No Todo! Click Add To Do button to create one.
@@ -56,7 +56,7 @@ const TodoList = () => {
                         className="m-1"
                         variant='danger'
                         size='sm'
-                        onClick={() => dispatch(deleteTodo({ id: todo.id }))}
+                        onClick={() => dispatch(openPopup({ id: todo.id }))}
                     >
                         Delete
                     </Button>

@@ -6,7 +6,7 @@ import { createTodo, updateTodo } from "../redux/features/TodoSlice";
 import FormContainer from "./FormContainer";
 
 const AddTodo = () => {
-  const [validated, setValidated] = useState(false);
+  const [error, setError] = useState({});
   const { isEdit, editTodoValue } = useSelector(state => state.todo);
   const initialState = isEdit ? editTodoValue : {
     name: "",
@@ -36,9 +36,34 @@ const AddTodo = () => {
       [target.name]: target.value,
       hobby,
     });
+    if (target?.name === "name") {
+      setError({
+        name: "",
+      });
+    }
+    if (target?.name === "taskName") {
+      setError({
+        taskName: ""
+      });
+    }
   };
   const handleSubmit = (event) => {
     event.preventDefault();
+    const re = /^[A-Za-z ]+$/;
+    if (!value.name) {
+      setError((error) => ({ ...error, name: 'Required' }))
+      return;
+    }
+    if (!re.test(value.name)) {
+      setError((error) => ({ ...error, name: 'Only Alphabets are allowed' }))
+      return;
+    }
+
+    if (!value.taskName) {
+      setError((error) => ({ ...error, taskName: 'Required' }))
+      return;
+    }
+
     if (isEdit) {
       dispatch(updateTodo({ ...value, id: editTodoValue.id }))
     }
@@ -48,7 +73,7 @@ const AddTodo = () => {
   };
 
   return (
-    <FormContainer>
+    < FormContainer >
       <Card bg="light" border="secondary">
         <Card.Title className="text-center font-weight-bold py-3">
           {isEdit ? 'Update To Do' : 'Add To Do'}
@@ -59,12 +84,14 @@ const AddTodo = () => {
               <Form.Group controlId="name" className="mb-3">
                 <Form.Label>Name</Form.Label>
                 <Form.Control
+                  maxLength={15}
                   name="name"
                   type="text"
                   placeholder="Enter your name"
                   value={value?.name}
                   onChange={(e) => handleChange(e)}
                 />
+                <span className="text-danger">{error?.name}</span>
               </Form.Group>
 
               <Form.Group controlId="gender" className="mb-3">
@@ -174,6 +201,7 @@ const AddTodo = () => {
                   value={value?.taskName}
                   onChange={(e) => handleChange(e)}
                 />
+                <span className="text-danger">{error?.taskName}</span>
               </Form.Group>
               <Form.Group controlId="status" className="mb-3">
                 <Form.Group className="mb-3">
@@ -198,7 +226,7 @@ const AddTodo = () => {
           </Form>
         </Card.Body>
       </Card>
-    </FormContainer>
+    </FormContainer >
   );
 };
 
