@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import todoReducer from './features/TodoSlice';
 
-const reducer = {
+const rootReducer = {
     todo: todoReducer
 };
 
@@ -10,9 +10,11 @@ const reducer = {
 const preloadedState = {
 };
 
+
 const store = configureStore({
-    reducer,
+    reducer: rootReducer,
     preloadedState,
-});
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
+})
 
 export default store;
