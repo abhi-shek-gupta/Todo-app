@@ -6,7 +6,7 @@ import { createTodo, updateTodo } from "../redux/features/TodoSlice";
 import FormContainer from "./FormContainer";
 
 const AddTodo = () => {
-  const [validated, setValidated] = useState(false);
+  const [error, setError] = useState({});
   const { isEdit, editTodoValue } = useSelector(state => state.todo);
   const initialState = isEdit ? editTodoValue : {
     name: "",
@@ -30,6 +30,12 @@ const AddTodo = () => {
         hobby.splice(hobby.indexOf(target.value), 1);
       }
     };
+    if (['name', 'taskName'].includes(name => (target.name === name) && !target.value)) {
+      setError({
+        ...error,
+        [target.name]: 'Required'
+      })
+    }
 
     setValue({
       ...value,
@@ -59,12 +65,14 @@ const AddTodo = () => {
               <Form.Group controlId="name" className="mb-3">
                 <Form.Label>Name</Form.Label>
                 <Form.Control
+                  maxLength={15}
                   name="name"
                   type="text"
                   placeholder="Enter your name"
                   value={value?.name}
                   onChange={(e) => handleChange(e)}
                 />
+                <Form.Control.Feedback type='invalid'>{error.name}</Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group controlId="gender" className="mb-3">
@@ -174,6 +182,7 @@ const AddTodo = () => {
                   value={value?.taskName}
                   onChange={(e) => handleChange(e)}
                 />
+                <Form.Control.Feedback type='invalid'>{error.name}</Form.Control.Feedback>
               </Form.Group>
               <Form.Group controlId="status" className="mb-3">
                 <Form.Group className="mb-3">
