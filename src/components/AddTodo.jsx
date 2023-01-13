@@ -30,21 +30,33 @@ const AddTodo = () => {
         hobby.splice(hobby.indexOf(target.value), 1);
       }
     };
-    if (['name', 'taskName'].includes(name => (target.name === name) && !target.value)) {
-      setError({
-        ...error,
-        [target.name]: 'Required'
-      })
-    }
 
     setValue({
       ...value,
       [target.name]: target.value,
       hobby,
     });
+    if (target?.name === "name") {
+      setError({
+        name: "",
+      });
+    }
+    if (target?.name === "taskName") {
+      setError({
+        taskName: ""
+      });
+    }
   };
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!value.name) {
+      setError((error) => ({ ...error, name: 'Please Enter Name' }))
+      return;
+    }
+    if (!value.taskName) {
+      setError((error) => ({ ...error, taskName: 'Please Task Name' }))
+      return;
+    }
     if (isEdit) {
       dispatch(updateTodo({ ...value, id: editTodoValue.id }))
     }
@@ -54,7 +66,7 @@ const AddTodo = () => {
   };
 
   return (
-    <FormContainer>
+    < FormContainer >
       <Card bg="light" border="secondary">
         <Card.Title className="text-center font-weight-bold py-3">
           {isEdit ? 'Update To Do' : 'Add To Do'}
@@ -72,7 +84,7 @@ const AddTodo = () => {
                   value={value?.name}
                   onChange={(e) => handleChange(e)}
                 />
-                <Form.Control.Feedback type='invalid'>{error.name}</Form.Control.Feedback>
+                <span className="text-danger">{error?.name}</span>
               </Form.Group>
 
               <Form.Group controlId="gender" className="mb-3">
@@ -182,7 +194,7 @@ const AddTodo = () => {
                   value={value?.taskName}
                   onChange={(e) => handleChange(e)}
                 />
-                <Form.Control.Feedback type='invalid'>{error.name}</Form.Control.Feedback>
+                <span className="text-danger">{error?.taskName}</span>
               </Form.Group>
               <Form.Group controlId="status" className="mb-3">
                 <Form.Group className="mb-3">
@@ -207,7 +219,7 @@ const AddTodo = () => {
           </Form>
         </Card.Body>
       </Card>
-    </FormContainer>
+    </FormContainer >
   );
 };
 

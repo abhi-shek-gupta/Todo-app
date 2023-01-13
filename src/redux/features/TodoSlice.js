@@ -3,7 +3,8 @@ const initialState = {
     todos: [],
     isEdit: false,
     isCreate: false,
-    editTodoValue: {}
+    editTodoValue: {},
+    popup: { show: false, id: null },
 };
 const TodoSlice = createSlice({
     name: 'Todo',
@@ -28,9 +29,15 @@ const TodoSlice = createSlice({
             return {
                 ...state, todos, isEdit: false
             }
-        }
+        },
+        openPopup: (state, { payload }) => {
+            return { ...state, popup: { show: true, id: payload.id } }
+        },
+        closePopup: (state, { payload }) => {
+            return { ...state, popup: { show: false, id: null } }
+        },
     }
 });
 
-export const { addTodo, editTodo, deleteTodo, updateTodo, createTodo } = TodoSlice.actions;
+export const { addTodo, editTodo, deleteTodo, updateTodo, createTodo, openPopup, closePopup } = TodoSlice.actions;
 export default TodoSlice.reducer;
