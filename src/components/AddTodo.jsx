@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Form, Row, Button, Card, Col } from "react-bootstrap";
 import DatePicker from "react-date-picker";
-import { useDispatch } from "react-redux";
-import { addTodo } from "../redux/features/TodoSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { createTodo, updateTodo } from "../redux/features/TodoSlice";
 import FormContainer from "./FormContainer";
 
 const AddTodo = () => {
   const [validated, setValidated] = useState(false);
-  const [value, setValue] = useState({
+  const { isEdit, editTodoValue } = useSelector(state => state.todo);
+  const initialState = isEdit ? editTodoValue : {
     name: "",
     gender: "male",
     hobby: [],
@@ -15,30 +16,42 @@ const AddTodo = () => {
     date: new Date(),
     taskName: "",
     status: "active",
-    action: "",
-  });
+  }
+  const [value, setValue] = useState(initialState);
 
   const dispatch = useDispatch();
   const handleChange = ({ target }) => {
-    let hobby = [];
-    if (target.name === "hobby") hobby = [...value.hobby, target.value];
+    let hobby = [...value.hobby];
+
+    if (target.name === "hobby") {
+      if (!hobby.includes(target.value)) {
+        hobby.push(target.value);
+      } else {
+        hobby.splice(hobby.indexOf(target.value), 1);
+      }
+    };
+
     setValue({
       ...value,
       [target.name]: target.value,
       hobby,
-      id: Date.now(),
     });
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(value);
-    dispatch(addTodo(value));
+    if (isEdit) {
+      dispatch(updateTodo({ ...value, id: editTodoValue.id }))
+    }
+    else {
+      dispatch(createTodo({ ...value, id: Date.now() }));
+    }
   };
+
   return (
     <FormContainer>
       <Card bg="light" border="secondary">
         <Card.Title className="text-center font-weight-bold py-3">
-          Add To Do
+          {isEdit ? 'Update To Do' : 'Add To Do'}
         </Card.Title>
         <Card.Body>
           <Form onSubmit={handleSubmit}>
@@ -176,21 +189,9 @@ const AddTodo = () => {
                   </Form.Select>
                 </Form.Group>
               </Form.Group>
-
-              <Form.Group controlId="action" className="mb-3">
-                <Form.Label>Action</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  type="text"
-                  name="action"
-                  placeholder="Action"
-                  value={value?.action}
-                  onChange={(e) => handleChange(e)}
-                />
-              </Form.Group>
               <div>
                 <Button variant="dark" type="submit" style={{ width: "100%" }}>
-                  Add
+                  {isEdit ? 'Upadte' : 'Add'}
                 </Button>
               </div>
             </Row>
