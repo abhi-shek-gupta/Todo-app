@@ -24,7 +24,7 @@ const TodoSlice = createSlice({
         updateTodo: (state, { payload }) => {
             const todos = [...state.todos];
             const getIndex = todos.findIndex(todo => todo.id === payload.id);
-            todos.splice(getIndex, 0, { ...payload });
+            todos.splice(getIndex, 1, { ...payload });
             return {
                 ...state, todos, isEdit: false
             }

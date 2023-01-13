@@ -6,6 +6,11 @@ import { editTodo, deleteTodo } from '../redux/features/TodoSlice';
 const TodoList = () => {
     const { todos } = useSelector(state => state.todo);
     const dispatch = useDispatch();
+
+    const formatDate = (date) => {
+        const d = new Date(`${date}`);
+        return `${d.getDate()}/${d.getMonth() + 1 +   1}/${d.getFullYear()}`
+    }
     if (todos.length === 0) return (<Alert variant='info'>
         No Todo! Click Add To Do button to create one.
     </Alert>);
@@ -28,7 +33,7 @@ const TodoList = () => {
                 <td>{todo.gender}</td>
                 <td>{todo?.hobby?.join()}</td>
                 <td>{todo.age}</td>
-                <td>{`${todo.date}`}</td>
+                <td>{formatDate(todo.date)}</td>
                 <td>{todo.taskName}</td>
                 <td>
                     {todo?.status === 'active' ? (
@@ -38,8 +43,8 @@ const TodoList = () => {
                     )}
                 </td>
                 <td>
-
                     <Button
+                        className="m-1"
                         variant='primary'
                         size='sm'
                         onClick={() => dispatch(editTodo({ ...todo }))}
@@ -48,7 +53,7 @@ const TodoList = () => {
                     </Button>
 
                     <Button
-                        className="ms-1"
+                        className="m-1"
                         variant='danger'
                         size='sm'
                         onClick={() => dispatch(deleteTodo({ id: todo.id }))}

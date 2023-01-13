@@ -7,7 +7,7 @@ const AddTodoButton = () => {
     const dispatch = useDispatch();
     return (
         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-            <Button onClick={() => dispatch(addTodo())} className="mb-3 text-right">
+            <Button onClick={() => dispatch(addTodo())} className="mb-3">
                 Add To Do
             </Button>
         </div>
