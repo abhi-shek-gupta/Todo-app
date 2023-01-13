@@ -4,7 +4,7 @@ Demo link :- https://vctyeb-3000.preview.csb.app/
 
 To Run this on local follow follwing steps 
 1. Install dependencies 
-  `npm i`
+  `yarn install`
  2. Run project 
- `npm run start`
+ `yarn run start`
  3. Access the Project on http://localhost:3000/
